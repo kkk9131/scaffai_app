@@ -1,0 +1,14 @@
+{
+  "tokens": {
+    "default": {
+      "client_id": "1072944905499-vm2v2i5dvn0a0d2o4ca36i1vge8cvbn0.apps.googleusercontent.com",
+      "client_secret": "v6V3fKV_zWU7iw1DrpO1rknX",
+      "type": "authorized_user",
+      "refresh_token": "1//0erDgK2555Oh0CgYIARAAGA4SNwF-L9Ir2jkZ9TSRUd_DGpVejO3a4HpOhRFLm2CXI_KdG236uAQgzb9pSdmziGZMGCgi93Vb_4E",
+      "access_token": "ya29.a0AeXRPp45fdZyGwhSPPU4hf6zo74sQ2b0SZLI6pIQiQEIa4AroNSuXyYFAEFhPTrlXVRKaJUYGfPBU-RfXTzcdfSYjfx8RfoFsLAyxtEpnsB3rIg6r0KXwcfQoMMi1-ong9PQF99CpGt3ODqRSOnIEIvND_EPUus3-XhFsFm1jAaCgYKARcSARASFQHGX2Mis2oyWXFVjnHppQGkr5tRkw0177",
+      "token_type": "Bearer",
+      "expiry_date": 1743358845867,
+      "id_token": "ya29.a0AeXRPp45fdZyGwhSPPU4hf6zo74sQ2b0SZLI6pIQiQEIa4AroNSuXyYFAEFhPTrlXVRKaJUYGfPBU-RfXTzcdfSYjfx8RfoFsLAyxtEpnsB3rIg6r0KXwcfQoMMi1-ong9PQF99CpGt3ODqRSOnIEIvND_EPUus3-XhFsFm1jAaCgYKARcSARASFQHGX2Mis2oyWXFVjnHppQGkr5tRkw0177"
+    }
+  }
+}
