@@ -1,0 +1,21 @@
+{
+  "name": "@scaffai/database",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "echo 'Database package'",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@scaffai/types": "workspace:*",
+    "@supabase/supabase-js": "^2.49.8",
+    "@supabase/ssr": "^0.6.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

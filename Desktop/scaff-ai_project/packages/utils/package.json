@@ -1,0 +1,19 @@
+{
+  "name": "@scaffai/utils",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "echo 'Utils package'",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@scaffai/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
