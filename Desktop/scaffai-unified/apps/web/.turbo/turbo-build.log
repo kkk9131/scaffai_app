@@ -1,0 +1,18 @@
+
+> @scaffai/web@0.1.0 build /Users/kazuto/Desktop/scaffai-unified/apps/web
+> vite build
+
+vite v5.4.19 building for production...
+transforming...
+✓ 2068 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     0.79 kB │ gzip:   0.47 kB
+dist/assets/index-Dmr3vTat.css     36.27 kB │ gzip:   6.54 kB
+dist/assets/index-Z8P6utHj.js   1,122.50 kB │ gzip: 310.84 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.64s

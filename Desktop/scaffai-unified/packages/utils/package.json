@@ -1,0 +1,28 @@
+{
+  "name": "@scaffai/utils",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@scaffai/types": "workspace:*",
+    "date-fns": "^3.4.0",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
