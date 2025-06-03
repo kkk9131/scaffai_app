@@ -1,0 +1,33 @@
+{
+  "name": "scaffai-unified",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.12.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "dev:web": "turbo dev --filter=web",
+    "dev:mobile": "turbo dev --filter=mobile",
+    "build:web": "turbo build --filter=web",
+    "build:mobile": "turbo build --filter=mobile"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3",
+    "prettier": "^3.3.0",
+    "eslint": "^9.14.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9"
+  }
+}
