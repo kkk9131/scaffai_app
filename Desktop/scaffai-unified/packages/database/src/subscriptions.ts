@@ -26,7 +26,7 @@ export class SubscriptionService {
       throw error
     }
     
-    return data
+    return data as SubscriptionInfo | null
   }
 
   // Create new subscription

@@ -59,6 +59,69 @@ export interface CalculationResult {
   tie_column_used: boolean;
 }
 
+export interface ScaffoldCalculationInput {
+  // Building dimensions
+  widthNS: number;
+  widthEW: number;
+  
+  // Eaves measurements
+  eavesN: number;
+  eavesE: number;
+  eavesS: number;
+  eavesW: number;
+  
+  // Boundary constraints (null means no boundary)
+  boundaryN: number | null;
+  boundaryE: number | null;
+  boundaryS: number | null;
+  boundaryW: number | null;
+  
+  // Building specifications
+  standardHeight: number;
+  roofShape: string;
+  tieColumn: boolean;
+  railingCount: number;
+  
+  // Special parts usage for NS direction
+  use355NS?: number;
+  use300NS?: number;
+  use150NS?: number;
+  
+  // Special parts usage for EW direction
+  use355EW?: number;
+  use300EW?: number;
+  use150EW?: number;
+  
+  // Target margin
+  targetMargin?: number;
+}
+
+export interface ScaffoldCalculationResult {
+  // Span totals
+  nsTotalSpan: number;
+  ewTotalSpan: number;
+  
+  // Span structures
+  nsSpanStructure: string;
+  ewSpanStructure: string;
+  
+  // Gap measurements
+  northGap: string;
+  southGap: string;
+  eastGap: string;
+  westGap: string;
+  
+  // Height calculations
+  numStages: number;
+  modulesCount: number;
+  jackUpHeight: number;
+  firstLayerHeight: number;
+  
+  // Tie column information
+  tieOk: boolean;
+  tieColumnUsed: boolean;
+}
+
 export interface SpanCalculationParams {
   width: number;
   eaves: number;

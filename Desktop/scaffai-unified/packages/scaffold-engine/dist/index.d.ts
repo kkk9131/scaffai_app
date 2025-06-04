@@ -1,8 +1,5 @@
-export { calcAll } from './calc-all';
-export { calculateFaceDimensions } from './face-dimensions';
-export { calculateSpanWithBoundaries } from './span-calculation';
-export { calculateInitialMargins } from './margins';
-export { baseWidth, adjustLength, selectParts, totalSpan, formatSpanParts } from './utils';
-export * from './constants';
-export type * from './types';
+import { ScaffoldCalculationInput, ScaffoldCalculationResult } from '@scaffai/types';
+export declare function baseWidth(width: number, unit?: number): number;
+export declare function selectParts(targetLength: number, partsOptions?: number[], maxItems?: number): number[];
+export declare function calcAll(input: ScaffoldCalculationInput): ScaffoldCalculationResult;
 //# sourceMappingURL=index.d.ts.map

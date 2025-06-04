@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Cache directories
+.turbo/
+.expo/
+.cache/
+
+# Testing
+coverage/
+.nyc_output
+
+# Temporary folders
+tmp/
+temp/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Other build tools
+.parcel-cache
+
+# Claude
+.claude/
+
+# Legacy directories
+scaffai-app/
+web_ui/
+scaffai-unified1/
+scaffai-unified-mvp/
+scaffai-backup-20250526/
+scaffai-project/
+
+# Local Supabase files
+supabase/.branches
+supabase/.temp
