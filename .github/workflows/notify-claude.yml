@@ -2,6 +2,8 @@ name: Notify Claude             # ワークフローの表示名（自由に変�
 
 # ───── ① いつ動かす？ ─────
 on:
+  issues:                       # Issue が作成された時
+    types: [opened]
   issue_comment:                # Issue や PR コメントが作成された時
     types: [created]
   workflow_dispatch:            # 手動実行もできるようにする（任意）
@@ -19,8 +21,17 @@ jobs:
       # 1) リポジトリをチェックアウト
       - uses: actions/checkout@v4
 
-      # 2) 先ほどの "Post comment as me"
-      - name: Post comment as me
+      # 2) Issue作成時とコメント作成時で条件分岐
+      - name: Post comment on new issue
+        if: github.event_name == 'issues'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.MY_PAT }}          # PAT をリポジトリ Secret に登録
+          issue-number: ${{ github.event.issue.number }}
+          body: "@claude 新しいIssueが作成されました。確認お願いします！"
+
+      - name: Post comment on issue comment
+        if: github.event_name == 'issue_comment'
         uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.MY_PAT }}          # PAT をリポジトリ Secret に登録
