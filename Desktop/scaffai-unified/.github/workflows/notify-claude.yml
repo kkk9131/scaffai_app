@@ -1,0 +1,28 @@
+name: Notify Claude             # ワークフローの表示名（自由に変更可）
+
+# ───── ① いつ動かす？ ─────
+on:
+  issue_comment:                # Issue や PR コメントが作成された時
+    types: [created]
+  workflow_dispatch:            # 手動実行もできるようにする（任意）
+
+# ───── ② ジョブ定義 ─────
+jobs:
+  comment:
+    runs-on: ubuntu-latest      # GitHub が用意する Linux ランナー
+
+    # ↓ 「コメントを書く」ための権限（重要）
+    permissions:
+      issues: write             # Issue / PR への書き込みを許可
+
+    steps:
+      # 1) リポジトリをチェックアウト
+      - uses: actions/checkout@v4
+
+      # 2) 先ほどの “Post comment as me”
+      - name: Post comment as me
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.MY_PAT }}          # PAT をリポジトリ Secret に登録
+          issue-number: ${{ github.event.issue.number }}
+          body: "@claude こちら確認お願いします！"
