@@ -1,0 +1,41 @@
+name: ScaffAI Unified
+description: ScaffAI scaffolding calculation app with mobile and web support
+
+# Project structure
+structure:
+  type: monorepo
+  apps:
+    - mobile (React Native + Expo)
+    - web (React + Vite)
+  packages:
+    - database (Supabase integration)
+    - types (TypeScript definitions)
+    - utils (Shared utilities)
+    - scaffold-engine (Calculation engine)
+
+# Development commands
+commands:
+  dev: "pnpm dev"
+  build: "pnpm build" 
+  test: "pnpm test"
+  lint: "pnpm lint"
+  typecheck: "pnpm typecheck"
+
+# Key technologies
+technologies:
+  - React Native
+  - Expo
+  - React
+  - TypeScript
+  - Supabase
+  - Turborepo
+  - pnpm
+  - Tailwind CSS
+
+# Important files
+important_files:
+  - apps/mobile/app.json
+  - apps/web/package.json
+  - packages/database/src/client.ts
+  - turbo.json
+  - pnpm-workspace.yaml
