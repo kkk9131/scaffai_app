@@ -23,6 +23,6 @@ jobs:
       - name: Post comment as me
         uses: peter-evans/create-or-update-comment@v4
         with:
-          token: ${{ secrets.my_pat }}          # PAT をリポジトリ Secret に登録
+          token: ${{ secrets.MY_PAT }}          # PAT をリポジトリ Secret に登録
           issue-number: ${{ github.event.issue.number }}
           body: "@claude こちら確認お願いします！"
