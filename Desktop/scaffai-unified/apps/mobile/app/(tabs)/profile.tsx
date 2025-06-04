@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { InputField } from '@/components/InputField';
 import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
+import { storageService } from '@/src/services/storage';
 
 interface UserProfile {
   id: string;
@@ -28,22 +30,43 @@ interface UserProfile {
 }
 
 export default function ProfileScreen() {
+  const { user, updateProfile, signOut } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [profile, setProfile] = useState<UserProfile>({
-    id: '1',
-    firstName: '太郎',
-    lastName: '田中',
-    email: 'tanaka@example.com',
-    phone: '+81 90-1234-5678',
-    company: '株式会社サンプル',
-    position: 'プロダクトマネージャー',
-    bio: 'ScaffAIを使って効率的な開発を目指しています。新しい技術に興味があり、チームワークを大切にしています。',
-    joinedDate: '2024-01-15',
-  });
-
-  const [editedProfile, setEditedProfile] = useState<UserProfile>(profile);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
   const [errors, setErrors] = useState<{[key: string]: string | null}>({});
+
+  useEffect(() => {
+    if (user) {
+      const userProfile: UserProfile = {
+        id: user.id,
+        firstName: user.full_name?.split(' ')[1] || '',
+        lastName: user.full_name?.split(' ')[0] || '',
+        email: user.email,
+        phone: '',
+        company: '',
+        position: '',
+        bio: '',
+        avatar: user.avatar_url,
+        joinedDate: new Date().toISOString().split('T')[0],
+      };
+      setProfile(userProfile);
+      setEditedProfile(userProfile);
+    }
+  }, [user]);
+
+  if (!profile || !editedProfile) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Ionicons name="sync" size={24} color={colors.primary.main} />
+          <Text style={styles.loadingText}>プロフィールを読み込み中...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -82,17 +105,53 @@ export default function ProfileScreen() {
     setIsLoading(true);
     
     try {
-      // TODO: Implement actual profile update logic
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Mock API call
+      const updates = {
+        full_name: `${editedProfile.lastName} ${editedProfile.firstName}`,
+        // Note: Other fields would need to be added to the database schema
+      };
       
-      setProfile(editedProfile);
-      setIsEditing(false);
+      const result = await updateProfile(updates);
       
-      Alert.alert('成功', 'プロフィールが更新されました');
-    } catch (error) {
-      Alert.alert('エラー', 'プロフィールの更新に失敗しました');
+      if (result.error) {
+        Alert.alert('エラー', result.error);
+      } else {
+        setProfile(editedProfile);
+        setIsEditing(false);
+        Alert.alert('成功', 'プロフィールが更新されました');
+      }
+    } catch (error: any) {
+      Alert.alert('エラー', error.message || 'プロフィールの更新に失敗しました');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAvatarUpload = async () => {
+    if (!user) return;
+    
+    setUploadingAvatar(true);
+    
+    try {
+      const result = await storageService.uploadAvatar(user.id);
+      
+      if (result.error) {
+        Alert.alert('エラー', result.error);
+      } else if (result.url) {
+        // Update profile with new avatar URL
+        const updateResult = await updateProfile({ avatar_url: result.url });
+        
+        if (updateResult.error) {
+          Alert.alert('エラー', 'アバターの更新に失敗しました');
+        } else {
+          setProfile(prev => prev ? { ...prev, avatar: result.url } : null);
+          setEditedProfile(prev => prev ? { ...prev, avatar: result.url } : null);
+          Alert.alert('成功', 'プロフィール画像が更新されました');
+        }
+      }
+    } catch (error: any) {
+      Alert.alert('エラー', error.message || 'アップロードに失敗しました');
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -111,9 +170,13 @@ export default function ProfileScreen() {
         { 
           text: 'ログアウト', 
           style: 'destructive',
-          onPress: () => {
-            // TODO: Implement actual logout logic
-            router.push('/auth');
+          onPress: async () => {
+            try {
+              await signOut();
+              router.push('/auth');
+            } catch (error: any) {
+              Alert.alert('エラー', error.message || 'ログアウトに失敗しました');
+            }
           }
         },
       ]
@@ -213,8 +276,16 @@ export default function ProfileScreen() {
               </View>
             )}
             {isEditing && (
-              <TouchableOpacity style={styles.avatarEditButton}>
-                <Ionicons name="camera" size={16} color="white" />
+              <TouchableOpacity 
+                style={styles.avatarEditButton}
+                onPress={handleAvatarUpload}
+                disabled={uploadingAvatar}
+              >
+                <Ionicons 
+                  name={uploadingAvatar ? "sync" : "camera"} 
+                  size={16} 
+                  color="white" 
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -543,5 +614,15 @@ const styles = StyleSheet.create({
   dangerAction: {
     marginTop: 16,
     borderRadius: 12,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: colors.text.primary,
   },
 });

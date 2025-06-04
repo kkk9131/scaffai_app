@@ -14,8 +14,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { InputField } from '@/components/InputField';
 import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
 
 export default function ForgotPasswordScreen() {
+  const { resetPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -44,14 +46,17 @@ export default function ForgotPasswordScreen() {
     setIsLoading(true);
     
     try {
-      // TODO: Implement actual password reset logic
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Mock API call
+      const result = await resetPassword(email);
       
-      setEmailSent(true);
-    } catch (error) {
+      if (result.error) {
+        Alert.alert('エラー', result.error);
+      } else {
+        setEmailSent(true);
+      }
+    } catch (error: any) {
       Alert.alert(
         'エラー',
-        'パスワードリセットメールの送信に失敗しました。もう一度お試しください。'
+        error.message || 'パスワードリセットメールの送信に失敗しました。もう一度お試しください。'
       );
     } finally {
       setIsLoading(false);

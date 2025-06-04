@@ -14,19 +14,23 @@ import { Ionicons } from '@expo/vector-icons';
 import { InputField } from '@/components/InputField';
 import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
 
 export default function AuthScreen() {
+  const { signIn, signUp, loading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+  const [firstNameError, setFirstNameError] = useState<string | null>(null);
+  const [lastNameError, setLastNameError] = useState<string | null>(null);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,7 +44,8 @@ export default function AuthScreen() {
     setEmailError(null);
     setPasswordError(null);
     setConfirmPasswordError(null);
-    setNameError(null);
+    setFirstNameError(null);
+    setLastNameError(null);
 
     // Email validation
     if (!email) {
@@ -62,8 +67,13 @@ export default function AuthScreen() {
 
     // Registration specific validation
     if (!isLogin) {
-      if (!name) {
-        setNameError('お名前を入力してください');
+      if (!firstName.trim()) {
+        setFirstNameError('姓を入力してください');
+        isValid = false;
+      }
+      
+      if (!lastName.trim()) {
+        setLastNameError('名を入力してください');
         isValid = false;
       }
       
@@ -85,18 +95,27 @@ export default function AuthScreen() {
     setIsLoading(true);
     
     try {
-      // TODO: Implement actual authentication logic
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Mock API call
+      let result;
       
-      Alert.alert(
-        '成功',
-        isLogin ? 'ログインしました' : 'アカウントを作成しました',
-        [{ text: 'OK', onPress: () => router.push('/dashboard') }]
-      );
-    } catch (error) {
+      if (isLogin) {
+        result = await signIn(email, password);
+      } else {
+        result = await signUp(email, password, { firstName, lastName });
+      }
+      
+      if (result.error) {
+        Alert.alert('エラー', result.error);
+      } else {
+        Alert.alert(
+          '成功',
+          isLogin ? 'ログインしました' : 'アカウントを作成しました',
+          [{ text: 'OK', onPress: () => router.push('/') }]
+        );
+      }
+    } catch (error: any) {
       Alert.alert(
         'エラー',
-        isLogin ? 'ログインに失敗しました' : 'アカウント作成に失敗しました'
+        error.message || (isLogin ? 'ログインに失敗しました' : 'アカウント作成に失敗しました')
       );
     } finally {
       setIsLoading(false);
@@ -107,11 +126,13 @@ export default function AuthScreen() {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
-    setName('');
+    setFirstName('');
+    setLastName('');
     setEmailError(null);
     setPasswordError(null);
     setConfirmPasswordError(null);
-    setNameError(null);
+    setFirstNameError(null);
+    setLastNameError(null);
   };
 
   const toggleMode = () => {
@@ -150,13 +171,26 @@ export default function AuthScreen() {
 
           <View style={styles.formContainer}>
             {!isLogin && (
-              <InputField
-                label="お名前"
-                value={name}
-                onChangeText={setName}
-                placeholder="お名前を入力"
-                error={nameError}
-              />
+              <View style={styles.nameContainer}>
+                <View style={styles.nameField}>
+                  <InputField
+                    label="姓"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                    placeholder="田中"
+                    error={firstNameError}
+                  />
+                </View>
+                <View style={styles.nameField}>
+                  <InputField
+                    label="名"
+                    value={lastName}
+                    onChangeText={setLastName}
+                    placeholder="太郎"
+                    error={lastNameError}
+                  />
+                </View>
+              </View>
             )}
             
             <InputField
@@ -210,11 +244,11 @@ export default function AuthScreen() {
             )}
 
             <TouchableOpacity
-              style={[styles.authButton, isLoading && styles.authButtonDisabled]}
+              style={[styles.authButton, (isLoading || loading) && styles.authButtonDisabled]}
               onPress={handleAuth}
-              disabled={isLoading}
+              disabled={isLoading || loading}
             >
-              {isLoading ? (
+              {(isLoading || loading) ? (
                 <View style={styles.loadingContainer}>
                   <Ionicons name="sync" size={20} color="white" />
                   <Text style={styles.authButtonText}>処理中...</Text>
@@ -298,6 +332,14 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   formContainer: {
+    flex: 1,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 4,
+  },
+  nameField: {
     flex: 1,
   },
   passwordContainer: {
